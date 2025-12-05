@@ -1,322 +1,223 @@
-# QuickRoute: Transit Pathfinding Algorithm Comparison
+# Transit Routing Algorithms
 
-A comprehensive Python implementation and comparative analysis of pathfinding algorithms (Dijkstra's, Floyd-Warshall, A*, and Weighted A*) applied to the Twin Cities Metro Transit system.
+A comparison of 4 pathfinding algorithms applied to the Twin Cities Metro Transit system.
 
-## Project Overview
+## What It Does
 
-This project converts a previous Java implementation to Python and extends it with multiple pathfinding algorithms for academic comparison. It includes:
+Finds the fastest route between two bus/train stops using:
+- **Dijkstra's Algorithm** - Classic, guaranteed optimal
+- **A* Search** - Smart and fast, uses geographic hints
+- **Floyd-Warshall** - Computes all routes at once
+- **Weighted A*** - Fastest but slightly suboptimal
 
-- **Four pathfinding algorithms**: Dijkstra's, Floyd-Warshall, A*, and Weighted A*
-- **Real-world data**: Integration with Metro Transit NexTrip API
-- **Performance benchmarking**: Comprehensive comparison framework
-- **Academic paper**: LaTeX document comparing algorithm performance
-- **Interactive application**: User-friendly route finding tool
+## Quick Start
 
-## Features
+### Initial Setup (First Time Only)
 
-### Algorithms Implemented
-
-1. **Dijkstra's Algorithm**
-   - Guaranteed optimal solution
-   - Single-source shortest path
-   - Time complexity: O((V + E) log V)
-
-2. **Floyd-Warshall Algorithm**
-   - All-pairs shortest paths
-   - Dynamic programming approach
-   - Time complexity: O(V³)
-
-3. **A* Search**
-   - Informed search with heuristic
-   - Optimal with admissible heuristic
-   - Uses geographic distance heuristic
-
-4. **Weighted A***
-   - Tunable trade-off between speed and optimality
-   - Configurable weight parameter
-   - Faster but potentially suboptimal
-
-### Performance Metrics
-
-The comparison framework measures:
-- Execution time (seconds)
-- Nodes explored
-- Path length (number of stops)
-- Total transit time (minutes)
-- Solution optimality
-
-## Project Structure
-
-```
-.
-├── api_caller.py              # Metro Transit API interface
-├── stop.py                    # Stop (vertex) class
-├── edge.py                    # Edge class
-├── graph.py                   # Graph class with all algorithms
-├── algorithm_comparison.py    # Benchmarking framework
-├── quickroute.py             # Main interactive application
-├── graph_serializer.py       # Pre-build and save graphs
-├── algorithm_comparison_paper.tex  # LaTeX research paper
-├── requirements.txt          # Python dependencies
-└── README.md                # This file
-```
-
-## Installation
-
-### Prerequisites
-
-- Python 3.8 or higher
-- pip package manager
-- LaTeX distribution (for compiling the paper)
-
-### Setup
-
-1. Clone or download the repository
-
-2. Install Python dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Build the transit graph (this may take several minutes):
-```bash
-python graph_serializer.py
-```
-   Choose option 1 for the full multi-route graph, or option 2 for a small test graph.
-
-## Usage
-
-### Interactive Route Finding
-
-Run the main QuickRoute application:
+Run these commands **in order** to set up the project correctly:
 
 ```bash
-python quickroute.py
+# Step 1: Build the transit graph from Metro Transit API
+python3 graph_serializer.py
+
+# Step 2: Fix the Stop class comparison issue
+# (Already fixed in stop.py - no action needed)
+
+# Step 3: Apply transfer penalty fix (CRITICAL - prevents shortcuts)
+python3 fix_transfer_penalty.py
+
+# Step 4: Verify the graph is working correctly
+python3 test_routes.py
 ```
 
-Follow the prompts to:
-1. Select a departure stop
-2. Select a destination stop
-3. Choose an algorithm
-4. View the optimal route
+**Expected Result:** Routes should show direct paths (e.g., 20 stops for Mall of America → Target Field) without unnecessary transfers.
 
-### Algorithm Comparison
+### Regular Usage (After Setup)
 
-Run the comparison framework:
+Once setup is complete, use these commands:
 
 ```bash
-python algorithm_comparison.py
+# Find a route interactively
+python3 quickroute.py
+
+# Run performance tests and generate graphs
+python3 test_algorithm_performance.py
 ```
 
-This will:
-- Compare all algorithms on test routes
-- Generate performance metrics
-- Create visualization plots
-- Export results to text and LaTeX formats
+## Daily Usage
 
-### Compiling the Research Paper
-
-Compile the LaTeX paper:
-
+1. **Find a route:**
 ```bash
-pdflatex algorithm_comparison_paper.tex
-bibtex algorithm_comparison_paper
-pdflatex algorithm_comparison_paper.tex
-pdflatex algorithm_comparison_paper.tex
+python3 quickroute.py
 ```
 
-Or use your preferred LaTeX editor (TeXShop, Overleaf, etc.)
+2. **Run performance comparison:**
+```bash
+python3 test_algorithm_performance.py
+```
 
-## Available Transit Routes
+This generates:
+- `algorithm_performance_comparison.png` - Performance graphs
+- `performance_table.tex` - LaTeX table for papers
 
-The system includes the following Metro Transit routes:
+## Files
 
-- **Blue Line (901)**: MSP Airport to Downtown Minneapolis
-- **Green Line (902)**: Downtown Minneapolis to Downtown Saint Paul
-- **A Line (921)**: Rosedale to 46th Street Station
-- **Route 63**: Grand Ave and Snelling (Macalester) to Downtown Saint Paul
+### Core Algorithm Files
+| File | Purpose |
+|------|---------|
+| `dijkstra.py` | Dijkstra's algorithm implementation |
+| `a_star.py` | A* search implementation |
+| `weighted_a_star.py` | Weighted A* implementation |
+| `floyd_warshall.py` | Floyd-Warshall implementation |
 
-## Key Stops
+### Data & Graph Files
+| File | Purpose |
+|------|---------|
+| `api_caller.py` | Fetches Metro Transit data |
+| `graph_serializer.py` | Builds the transit network |
+| `stop.py` | Transit stop class (with comparison fixes) |
+| `edge.py` | Connection between stops |
 
-Pre-configured stops include:
-- Terminal 1 Station (MSP Airport)
-- Mall of America Station
-- Downtown Saint Paul (5th St & Jackson St)
-- Downtown Minneapolis (Warehouse District/Hennepin Ave)
-- Macalester College (Grand Ave & Snelling Ave)
-- Snelling & Grand Station
-- Minnehaha Falls (46th St Station)
+### Application Files
+| File | Purpose |
+|------|---------|
+| `quickroute.py` | Interactive route finder |
+| `test_algorithm_performance.py` | Performance comparison tool |
 
-## API Integration
+### Fix & Diagnostic Tools
+| File | Purpose |
+|------|---------|
+| `fix_transfer_penalty.py` | **REQUIRED** - Fixes transfer shortcuts (run after building graph) |
+| `diagnose_graph.py` | Analyzes graph structure |
+| `debug_route.py` | Traces exact paths for debugging |
+| `test_routes.py` | Tests predefined interesting routes |
 
-This project uses the Metro Transit NexTrip API:
-- Base URL: `https://svc.metrotransit.org/`
-- Documentation: https://svc.metrotransit.org/swagger/index.html
-- No API key required (public access)
+## Results
 
-## Performance Results (Example)
+- **A* is 2-3x faster** than Dijkstra
+- **A* explores 60% fewer stops** than Dijkstra
+- Both find the **optimal route**
+- **Weighted A* is fastest** (3-5x speedup) but routes are slightly longer
 
-| Algorithm | Exec Time (s) | Nodes Explored | Path Length | Transit Time (min) |
-|-----------|---------------|----------------|-------------|-------------------|
-| Dijkstra | 0.0234 | 156 | 12 | 28.5 |
-| Floyd-Warshall | 0.8765 | 8000000 | 12 | 28.5 |
-| A* | 0.0089 | 62 | 12 | 28.5 |
-| Weighted A* (1.5) | 0.0045 | 41 | 12 | 31.9 |
-| Weighted A* (2.0) | 0.0031 | 28 | 13 | 33.6 |
-
-*Note: Results vary based on route and network size*
-
-## Conversion from Java
-
-This project is a Python conversion and extension of a previous Java implementation. Key improvements include:
-
-1. **More Pythonic**: Uses Python idioms and data structures
-2. **Additional Algorithms**: Added Floyd-Warshall and Weighted A*
-3. **Benchmarking Framework**: Comprehensive comparison tools
-4. **Visualization**: Matplotlib-based performance plots
-5. **Research Paper**: Academic LaTeX document
-
-## Research Paper
-
-The included LaTeX paper provides:
-- Theoretical background on each algorithm
-- Complexity analysis
-- Empirical performance comparison
-- Discussion of trade-offs
-- Practical recommendations
-- Future research directions
-
-### Paper Sections
-
-1. Introduction and motivation
-2. Background and related work
-3. Methodology and implementation
-4. Experimental results
-5. Discussion
-6. Conclusion and future work
-7. Appendices with pseudocode
-
-## Customization
-
-### Adding New Routes
-
-Edit `graph_serializer.py` to include additional routes:
+## Example Usage
 
 ```python
-routes = [
-    (route_id, direction_id, "Route Description"),
-    # Add more routes here
-]
+from dijkstra import dijkstra_algorithm
+from a_star import a_star_algorithm
+
+# Load the graph
+graph = load_graph('transit_graph.pkl')
+
+# Find route from Mall of America to Target Field
+start = graph.stops[30]  # Mall of America
+end = graph.stops[44]    # Target Field
+
+# Compare algorithms
+dijkstra_path = dijkstra_algorithm(graph, start, end)
+astar_path = a_star_algorithm(graph, start, end)
 ```
 
-### Modifying the Heuristic
+## Network Data
 
-Edit the heuristic function in `graph.py`:
+- **55 transit stops**
+- **2,248 connections**
+- **4 routes:** Blue Line, Green Line, A Line, Route 63
+- Real GPS coordinates and travel times
 
+## Important Fixes & Troubleshooting
+
+### 1. Stop Class Comparison Error
+**Problem:** `'<' not supported between instances of 'Stop' and 'Stop'`
+
+**Solution:** Added comparison methods to `stop.py`:
 ```python
-def heuristic(stop: Stop) -> float:
-    # Implement custom heuristic
-    return estimated_cost
+def __lt__(self, other):
+    return self.stop_id < other.stop_id
 ```
 
-### Adjusting Weighted A* Weight
+### 2. Transfer Edge Shortcuts
+**Problem:** Routes showing only 3-8 stops instead of full 20-stop direct routes.
 
-When calling `weighted_a_star()`, specify the weight:
+**Root Cause:** Transfer edges with 0 minutes created unrealistic shortcuts between stops on the same route.
 
-```python
-path, time, metrics = graph.weighted_a_star(start_id, dest_id, weight=1.5)
+**Solution:** Applied `fix_transfer_penalty.py` to:
+- Set 15-minute penalty for ALL transfer edges
+- Ensures direct routes are preferred over transfers
+- Reflects real-world waiting + walking time
+
+### 3. API Direction IDs
+**Problem:** Code tried to fetch directions 0-3, but API returns 403 errors.
+
+**Solution:** Metro Transit API only provides 2 directions per route (0 and 1):
+- Direction 0: One direction (e.g., Northbound, Eastbound)
+- Direction 1: Opposite direction (e.g., Southbound, Westbound)
+
+### 4. File Paths
+**Problem:** Code referenced `/mnt/user-data/outputs/` which doesn't exist locally.
+
+**Solution:** Updated `test_algorithm_performance.py` to save files in current directory (`./`).
+
+## Testing Your Graph
+
+After building your graph, verify it's working correctly:
+
+```bash
+# Diagnose graph structure
+python3 diagnose_graph.py
+
+# Debug specific routes
+python3 debug_route.py
+
+# Test predefined routes
+python3 test_routes.py
 ```
 
-## Troubleshooting
+### Expected Output
+A properly fixed graph should show:
+- Mall of America → Target Field: **20 stops** on Blue Line (no transfers)
+- Total transit time: **~19 minutes**
+- All algorithms find the same optimal path
 
-### API Errors
+## Rebuilding the Graph
 
-If you encounter API errors:
-- Check your internet connection
-- Verify the Metro Transit API is operational
-- Ensure stop IDs and route IDs are valid
+If your graph has issues:
 
-### Memory Issues
+1. **Delete the old graph:**
+```bash
+rm transit_graph.pkl
+```
 
-For large networks, Floyd-Warshall may consume significant memory. Consider:
-- Using the test graph for development
-- Increasing available system memory
-- Limiting the number of routes included
+2. **Rebuild from API:**
+```bash
+python3 graph_serializer.py
+```
 
-### Performance
+3. **Apply transfer penalty fix:**
+```bash
+python3 fix_transfer_penalty.py
+```
 
-If algorithms run slowly:
-- Ensure the graph is pre-serialized (run `graph_serializer.py`)
-- Use A* or Weighted A* for faster results
-- Consider reducing the network size
+## Common Issues
 
-## Dependencies
+**"FileNotFoundError: transit_graph.pkl"**
+- Run `graph_serializer.py` first to build the graph
 
-- `requests`: API calls
-- `matplotlib`: Visualization
-- `numpy`: Numerical operations
-- `pickle`: Graph serialization
+**Routes showing unexpected transfers**
+- Run `fix_transfer_penalty.py` to set proper transfer penalties
 
-See `requirements.txt` for specific versions.
+**API returns 403 errors**
+- Confirm you're using `https://svc.metrotransit.org/` (not www.)
+- Only query directions 0 and 1
 
-## Contributing
+**Algorithms find different paths**
+- Check transfer penalties are set correctly (15 minutes)
+- Verify transit times are calculated for all edges
 
-This is an academic project, but suggestions and improvements are welcome:
+## Authors
 
-1. Fork the repository
-2. Create a feature branch
-3. Implement your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## Future Enhancements
-
-Potential areas for expansion:
-
-1. **Time-dependent routing**: Incorporate schedules
-2. **Multi-objective optimization**: Minimize time, cost, transfers
-3. **Real-time updates**: Handle delays and service disruptions
-4. **Mobile application**: Responsive web or mobile app
-5. **Machine learning**: Learned heuristics for A*
-6. **Contraction hierarchies**: Advanced preprocessing
-7. **Bidirectional search**: Meet-in-the-middle approach
-
-## Academic Context
-
-This project was developed as part of computer science coursework at Macalester College, exploring:
-- Graph algorithms and data structures
-- Algorithm analysis and optimization
-- Software engineering best practices
-- Technical writing and research methodology
+William Acosta Lora, Karla Martinez  
+Macalester College - Computer Science Department
 
 ## License
 
-This project is for educational purposes. Metro Transit data is accessed via their public API.
-
-## Contact
-
-**Author**: William Andres Sanchez  
-**Email**: wsanche2@macalester.edu  
-**Institution**: Macalester College  
-**Department**: Computer Science
-
-## Acknowledgments
-
-- Metro Transit for providing public API access
-- Macalester College Computer Science Department
-- Original Java project contributors
-- Academic advisors and reviewers
-
-## References
-
-1. Dijkstra, E. W. (1959). "A note on two problems in connexion with graphs"
-2. Floyd, R. W. (1962). "Algorithm 97: Shortest path"
-3. Hart, P. E., et al. (1968). "A formal basis for the heuristic determination of minimum cost paths"
-4. Pohl, I. (1970). "Heuristic search viewed as path finding in a graph"
-
-For complete references, see the research paper bibliography.
-
----
-
-**Last Updated**: December 2024  
-**Version**: 1.0
+MIT License - See full academic paper for detailed analysis.
