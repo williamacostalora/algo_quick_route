@@ -72,8 +72,8 @@ This generates:
 | `a_star.py` | A* search implementation |
 | `weighted_a_star.py` | Weighted A* implementation |
 | `floyd_warshall.py` | Floyd-Warshall implementation |
-| `BFS.py` | Dijkstra's algorithm implementation |
-| `DFS.py` | Dijkstra's algorithm implementation |
+| `BFS.py` | BFS implementation |
+| `DFS.py` | DFS implementation |
 
 ### Data & Graph Files
 | File | Purpose |
