@@ -468,7 +468,7 @@ class Graph:
         return path, total_time, metrics
 
     # ==================== BFS ALGORITHM ====================
-    def BFS(self, start_id: int, destination_id, int) -> Tuple[List[Stop], float, Dict]:
+    def BFS(self, start_id: int, destination_id: int) -> Tuple[List[Stop], float, Dict]:
         """
         Find shortest path using Breadth-First Search algorithm.
 
@@ -491,7 +491,6 @@ class Graph:
         nodes_explored = 0
 
         for v in self.stops:
-            # v = edge.get_end_stop()
             if v not in state:
                 state[v] = "undiscovered"
                 previous[v] = None
@@ -502,16 +501,22 @@ class Graph:
         while not myqueue.empty():
             u = myqueue.get()
             for edge in self.get_connections(u.stop_id):
-                v = edge.get_end_stop()
-                if state[v] == "undiscovered":
-                    state[v] = "discovered"
+                end = edge.get_end_stop()
+                if state[end] == "undiscovered":
+                    state[end] = "discovered"
                     nodes_explored += 1
-                    previous[v] = u
-                    dist[v] = edge.get_transit_time()
-                    myqueue.put(v)
+                    previous[end] = u
+                    dist[end] = edge.get_transit_time()
+                    myqueue.put(end)
+                    
             state[u] = "processed"
 
         path = self._reconstruct_path(previous, start, destination)
+
+        total_time = 0
+        for aStop in path:
+            total_time = dist[aStop] + total_time
+
         total_time = dist[destination]
 
         metrics = {

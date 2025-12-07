@@ -1,6 +1,6 @@
 # Transit Routing Algorithms
 
-A comparison of 4 pathfinding algorithms applied to the Twin Cities Metro Transit system.
+A comparison of 6 pathfinding algorithms applied to the Twin Cities Metro Transit system.
 
 ## What It Does
 
@@ -9,6 +9,9 @@ Finds the fastest route between two bus/train stops using:
 - **A* Search** - Smart and fast, uses geographic hints
 - **Floyd-Warshall** - Computes all routes at once
 - **Weighted A*** - Fastest but slightly suboptimal
+- **BFS** - Searches through all nodes, focusing on breadth
+- **DFS** - Searches through all nodes, focusing on depth
+
 
 ## Quick Start
 
@@ -69,6 +72,8 @@ This generates:
 | `a_star.py` | A* search implementation |
 | `weighted_a_star.py` | Weighted A* implementation |
 | `floyd_warshall.py` | Floyd-Warshall implementation |
+| `BFS.py` | Dijkstra's algorithm implementation |
+| `DFS.py` | Dijkstra's algorithm implementation |
 
 ### Data & Graph Files
 | File | Purpose |

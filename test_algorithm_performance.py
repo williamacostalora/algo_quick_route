@@ -148,7 +148,7 @@ class AlgorithmTester:
             ('Floyd-Warshall', lambda: self.graph.floyd_warshall(start_stop.get_stop_id(), end_stop.get_stop_id())),
             ('Weighted A* (1.5)',
              lambda: self.graph.weighted_a_star(start_stop.get_stop_id(), end_stop.get_stop_id(), 1.5)),
-             ('BFS', lambda: self.graph.BFS(start_stop.get_stop_id(), end_stop.get_stop_id(), 1.5))
+             ('BFS', lambda: self.graph.BFS(start_stop.get_stop_id(), end_stop.get_stop_id()))
         ]
 
         for algo_name, algo_func in algorithms:
