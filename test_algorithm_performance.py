@@ -148,6 +148,7 @@ class AlgorithmTester:
             ('Floyd-Warshall', lambda: self.graph.floyd_warshall(start_stop.get_stop_id(), end_stop.get_stop_id())),
             ('Weighted A* (1.5)',
              lambda: self.graph.weighted_a_star(start_stop.get_stop_id(), end_stop.get_stop_id(), 1.5)),
+             ('BFS', lambda: self.graph.BFS(start_stop.get_stop_id(), end_stop.get_stop_id(), 1.5))
         ]
 
         for algo_name, algo_func in algorithms:
@@ -275,7 +276,7 @@ class AlgorithmTester:
                      fontsize=16, fontweight='bold')
 
         # Get data by algorithm
-        algorithms = ['Dijkstra', 'A*', 'Floyd-Warshall', 'Weighted A* (1.5)']
+        algorithms = ['Dijkstra', 'A*', 'Floyd-Warshall', 'Weighted A* (1.5)', 'BFS']
 
         # 1. Execution Time by Category
         ax1 = axes[0, 0]
@@ -323,7 +324,7 @@ class AlgorithmTester:
         # 3. Execution Time vs Path Length (scatter)
         ax3 = axes[1, 0]
         colors = {'Dijkstra': 'blue', 'A*': 'red', 'Floyd-Warshall': 'green',
-                  'Weighted A* (1.5)': 'purple'}
+                  'Weighted A* (1.5)': 'purple', 'BFS': 'orange'}
 
         for algo in algorithms:
             algo_results = [r for r in self.results if r['algorithm'] == algo]
@@ -417,7 +418,7 @@ class AlgorithmTester:
             f.write("\\hline\n")
 
             categories = ['Short Distance', 'Medium Distance', 'Long Distance', 'Multi-Route']
-            algorithms = ['Dijkstra', 'A*', 'Floyd-Warshall', 'Weighted A* (1.5)']
+            algorithms = ['Dijkstra', 'A*', 'Floyd-Warshall', 'Weighted A* (1.5)', 'BFS']
 
             for category in categories:
                 cat_results = [r for r in self.results if r['category'] == category]

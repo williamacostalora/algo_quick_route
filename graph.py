@@ -10,7 +10,7 @@ import time
 from stop import Stop
 from edge import Edge
 from api_caller import ApiCaller
-
+from queue import Queue
 
 class Graph:
     """Transit graph with multiple pathfinding algorithms."""
@@ -465,6 +465,63 @@ class Graph:
             'weight': weight
         }
         
+        return path, total_time, metrics
+
+    # ==================== BFS ALGORITHM ====================
+    def BFS(self, start_id: int, destination_id, int) -> Tuple[List[Stop], float, Dict]:
+        """
+        Find shortest path using Breadth-First Search algorithm.
+
+        Returns:
+            Tuple of (path, total_time, metrics)
+        """
+        start_time = time.time()
+
+        start = self.get_stop(start_id)
+        destination = self.get_stop(destination_id)
+
+        if not start or not destination:
+            return [], float('inf'), {}
+
+        # Initialize empty distances + start for all stops in "dist" dictionary
+        dist = {stop: float('inf') for stop in self.stops}
+        dist[start] = 0.0
+        previous = {}
+        state = {}
+        nodes_explored = 0
+
+        for v in self.stops:
+            # v = edge.get_end_stop()
+            if v not in state:
+                state[v] = "undiscovered"
+                previous[v] = None
+        state[start] = "discovered"
+        nodes_explored += 1
+        myqueue = Queue()
+        myqueue.put(start)
+        while not myqueue.empty():
+            u = myqueue.get()
+            for edge in self.get_connections(u.stop_id):
+                v = edge.get_end_stop()
+                if state[v] == "undiscovered":
+                    state[v] = "discovered"
+                    nodes_explored += 1
+                    previous[v] = u
+                    dist[v] = edge.get_transit_time()
+                    myqueue.put(v)
+            state[u] = "processed"
+
+        path = self._reconstruct_path(previous, start, destination)
+        total_time = dist[destination]
+
+        metrics = {
+            'algorithm': 'BFS',
+            'execution_time': time.time() - start_time,
+            'nodes_explored': nodes_explored,
+            'path_length': len(path),
+            'total_transit_time': total_time
+        }
+
         return path, total_time, metrics
     
     # ==================== HELPER METHODS ====================
