@@ -156,7 +156,7 @@ with open('graph_data.pkl', 'wb') as f:
 
 print("✓ Graph saved!")
 print("=" * 80)
-print("\n✅ REPAIR COMPLETE")
+print("\n REPAIR COMPLETE")
 print("\nChanges made:")
 print(f"  - Removed {removed} invalid transfer edges (between stops on same route)")
 print(f"  - Added 5-minute penalty to {transfer_count} valid transfers")

@@ -82,7 +82,7 @@ def create_and_serialize_graph():
 
     if not graph_list:
         print("\n" + "=" * 80)
-        print("❌ No graphs were created successfully.")
+        print(" No graphs were created successfully.")
         print("=" * 80)
         print("\nTroubleshooting:")
         print("1. Check your internet connection")
@@ -93,7 +93,7 @@ def create_and_serialize_graph():
 
     # Combine into multi-route graph
     print("\n" + "=" * 80)
-    print("🔗 Combining graphs and creating transfer connections...")
+    print(" Combining graphs and creating transfer connections...")
     print("=" * 80)
 
     combined_graph = Graph(graph_list=graph_list)
@@ -105,7 +105,7 @@ def create_and_serialize_graph():
 
     # Serialize to file
     filename = 'graph_data.pkl'
-    print(f"\n💾 Saving graph to {filename}...")
+    print(f"\n Saving graph to {filename}...")
 
     try:
         with open(filename, 'wb') as f:
@@ -113,11 +113,11 @@ def create_and_serialize_graph():
         print(f"✓ Graph successfully saved to {filename}")
 
     except Exception as e:
-        print(f"❌ Error saving graph: {e}")
+        print(f" Error saving graph: {e}")
         return
 
     print("\n" + "=" * 80)
-    print("✅ GRAPH SERIALIZATION COMPLETE!")
+    print(" GRAPH SERIALIZATION COMPLETE!")
     print("=" * 80)
     print(f"\nYou can now run quickroute.py to find transit routes.")
     print(f"\nGraph statistics:")
@@ -158,7 +158,7 @@ def create_small_test_graph():
             continue
 
     if not graph:
-        print("\n❌ Could not create test graph")
+        print("\n Could not create test graph")
         return
 
     filename = 'test_graph.pkl'
@@ -170,7 +170,7 @@ def create_small_test_graph():
         print(f"   Stops: {len(graph.stops)}")
 
     except Exception as e:
-        print(f"❌ Error creating test graph: {e}")
+        print(f" Error creating test graph: {e}")
 
 
 def main():
@@ -187,6 +187,8 @@ def main():
         create_small_test_graph()
     else:
         print("Invalid choice. Exiting.")
+
+##May change graphs for new algorithms added, or gui
 
 
 if __name__ == "__main__":

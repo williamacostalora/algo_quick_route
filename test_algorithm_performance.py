@@ -471,7 +471,7 @@ def main():
     tester.export_latex_table()
 
     print("\n" + "=" * 80)
-    print("✅ TESTING COMPLETE!")
+    print(" TESTING COMPLETE!")
     print("=" * 80)
     print("\nGenerated files:")
     print("  - algorithm_performance_comparison.png")

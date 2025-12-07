@@ -139,7 +139,7 @@ print("✓ Graph saved!")
 print("=" * 80)
 
 print(f"""
-✅ TRANSFER PENALTIES APPLIED
+ TRANSFER PENALTIES APPLIED
 
 Key changes:
   - Route edges: Realistic times based on distance

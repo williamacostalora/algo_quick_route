@@ -177,7 +177,7 @@ class QuickRoute:
                     
                     # Check for route change
                     if current_route is not None and edge_route != current_route and edge_route != -1:
-                        print(f"\n🔄 TRANSFER at {current_stop.get_name()}")
+                        print(f"\n TRANSFER at {current_stop.get_name()}")
                         print(f"   Change from Route {current_route} to Route {edge_route}")
                     
                     current_route = edge_route if edge_route != -1 else current_route

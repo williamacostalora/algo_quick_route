@@ -70,7 +70,7 @@ def main():
         return
 
     print("\n" + "=" * 80)
-    print("✅ COMPLETE!")
+    print(" COMPLETE!")
     print("=" * 80)
     print("\nTransfers now have a 5-minute penalty.")
     print("This makes routes prefer staying on the same line.")
