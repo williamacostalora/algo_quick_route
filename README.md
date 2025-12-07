@@ -215,9 +215,9 @@ python3 fix_transfer_penalty.py
 
 ## Authors
 
-William Acosta Lora, Karla Martinez  
+William Acosta Lora, Karla Martinez, Makol Chuol, Karim Amra, Dureti Gamada
 Macalester College - Computer Science Department
 
 ## License
 
-MIT License - See full academic paper for detailed analysis.
+Macalester College
