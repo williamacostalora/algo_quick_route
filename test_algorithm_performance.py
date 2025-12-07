@@ -339,35 +339,57 @@ class AlgorithmTester:
         ax3.legend()
         ax3.grid(True, alpha=0.3)
 
-        # 4. Speedup Comparison (relative to Dijkstra)
+        # 4. Average Execution Time Comparison (actual times, not relative)
         ax4 = axes[1, 1]
-        dijkstra_avg = statistics.mean([r['avg_execution_time']
-                                        for r in self.results
-                                        if r['algorithm'] == 'Dijkstra'])
 
-        speedups = []
+        # Calculate average execution time for each algorithm
+        avg_times = []
         for algo in algorithms:
-            algo_avg = statistics.mean([r['avg_execution_time']
+            algo_avg = statistics.mean([r['avg_execution_time'] * 1000  # Convert to ms
                                         for r in self.results
                                         if r['algorithm'] == algo])
-            speedup = dijkstra_avg / algo_avg if algo_avg > 0 else 0
-            speedups.append(speedup)
+            avg_times.append(algo_avg)
+            # Debug: print what we're seeing
+            print(f"DEBUG: {algo} average time = {algo_avg:.3f} ms")
 
-        bars = ax4.bar(range(len(algorithms)), speedups,
-                       color=['gray', 'lightcoral', 'lightgreen', 'plum'])
-        ax4.axhline(y=1.0, color='r', linestyle='--', label='Baseline (Dijkstra)')
+        # Color code: green for fastest, red for slowest, others in between
+        min_time = min(avg_times)
+        max_time = max(avg_times)
+        print(f"\nDEBUG: Fastest time = {min_time:.3f} ms, Slowest time = {max_time:.3f} ms")
+
+        colors_bars = []
+        for i, t in enumerate(avg_times):
+            if t == min_time:
+                colors_bars.append('lightgreen')  # Fastest
+                print(f"DEBUG: {algorithms[i]} is FASTEST")
+            elif t == max_time:
+                colors_bars.append('lightcoral')  # Slowest
+                print(f"DEBUG: {algorithms[i]} is SLOWEST")
+            else:
+                colors_bars.append('skyblue')  # In between
+
+        bars = ax4.bar(range(len(algorithms)), avg_times, color=colors_bars)
         ax4.set_xticks(range(len(algorithms)))
         ax4.set_xticklabels(algorithms, rotation=15, ha='right')
-        ax4.set_ylabel('Speedup Factor', fontweight='bold')
-        ax4.set_title('Relative Performance (vs Dijkstra)')
-        ax4.legend()
+        ax4.set_ylabel('Average Execution Time (ms)', fontweight='bold')
+        ax4.set_title('Average Execution Time Comparison')
         ax4.grid(True, axis='y', alpha=0.3)
 
-        # Add value labels
+        # Add value labels with ranking
         for i, bar in enumerate(bars):
             height = bar.get_height()
+            # Add the actual time value
             ax4.text(bar.get_x() + bar.get_width() / 2., height,
-                     f'{height:.2f}x', ha='center', va='bottom')
+                     f'{height:.3f} ms', ha='center', va='bottom', fontsize=9)
+
+        # Add legend explaining colors
+        from matplotlib.patches import Patch
+        legend_elements = [
+            Patch(facecolor='lightgreen', label='Fastest'),
+            Patch(facecolor='skyblue', label='Medium'),
+            Patch(facecolor='lightcoral', label='Slowest')
+        ]
+        ax4.legend(handles=legend_elements, loc='upper right')
 
         plt.tight_layout()
 
