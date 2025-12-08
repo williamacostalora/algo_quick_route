@@ -12,6 +12,7 @@ from edge import Edge
 from api_caller import ApiCaller
 from queue import Queue
 
+
 class Graph:
     """Transit graph with multiple pathfinding algorithms."""
     
@@ -529,8 +530,80 @@ class Graph:
 
         return path, total_time, metrics
     
+
+    def DFS(self, start_id: int, destination_id: int) -> Tuple[List[Stop], float, Dict]:
+        """
+        Find a path using Depth-First Search algorithm.
+
+        Returns:
+            Tuple of (path, total_time, metrics)
+        """
+        start_time = time.time()
+
+        start = self.get_stop(start_id)
+        destination = self.get_stop(destination_id)
+
+        if not start or not destination:
+            return [], float('inf'), {}
+
+        dist = {stop: float('inf') for stop in self.stops}
+        dist[start] = 0.0
+
+        previous: Dict[Stop, Optional[Stop]] = {}
+        visited: Set[Stop] = set()
+        nodes_explored = 0
+
+        stack = [start]
+        visited.add(start)     
+        nodes_explored += 1
+
+        while stack:
+            current = stack.pop()
+
+            if current == destination:
+                break
+
+            for edge in self.get_connections(current.stop_id):
+                neighbor = edge.get_end_stop()
+
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    nodes_explored += 1
+                    previous[neighbor] = current
+                    dist[neighbor] = dist[current] + edge.get_transit_time()
+                    stack.append(neighbor)
+
+        if destination not in visited:
+            return [], float('inf'), {}
+
+        path = self._reconstruct_path(previous, start, destination)
+        total_time = dist[destination]
+
+        metrics = {
+            'algorithm': 'DFS',
+            'execution_time': time.time() - start_time,
+            'nodes_explored': nodes_explored,
+            'path_length': len(path),
+            'total_transit_time': total_time
+        }
+
+        return path, total_time, metrics
+
+
     # ==================== HELPER METHODS ====================
+
+
+    def all_connections_visited(self, node: Stop, visited: Set[Stop]) -> bool:
+        """
+        Check if all neighbors of a node have been visited.
+        """
+        for edge in self.get_connections(node.stop_id):
+            neighbor = edge.get_end_stop()
+            if neighbor not in visited:
+                return False
+        return True
     
+
     def _reconstruct_path(self, previous: Dict, start: Stop, destination: Stop) -> List[Stop]:
         """Reconstruct the path from the previous dictionary."""
         path = deque()
@@ -550,3 +623,6 @@ class Graph:
         """Print the graph structure for debugging."""
         for stop_id, edge_list in self.edges.items():
             print(f"{stop_id} -> {[str(e) for e in edge_list]}")
+
+
+
