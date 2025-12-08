@@ -139,6 +139,8 @@ class QuickRoute:
             path, total_time, metrics = self.graph.weighted_a_star(departure_id, destination_id)
         elif algorithm == 'BFS':
             path, total_time, metrics = self.graph.BFS(departure_id, destination_id)
+        elif algorithm == 'DFS':
+            path, total_time, metrics = self.graph.DFS(departure_id, destination_id)
         else:
             print(f"Unknown algorithm: {algorithm}")
             return
@@ -233,8 +235,9 @@ class QuickRoute:
         print("3. Floyd-Warshall Algorithm")
         print("4. Weighted A* Algorithm")
         print("5. BFS")
-        
-        algorithm_choice = input("\nEnter choice (1-5), or press Enter for default): ").strip()
+        print("6. DFS")
+
+        algorithm_choice = input("\nEnter choice (1-6), or press Enter for default): ").strip()
         
         algorithm_map = {
             '1': 'dijkstra',
@@ -242,6 +245,7 @@ class QuickRoute:
             '3': 'floyd_warshall',
             '4': 'weighted_a_star',
             '5': 'BFS',
+            '6': 'DFS',
             '': 'dijkstra'
         }
         
