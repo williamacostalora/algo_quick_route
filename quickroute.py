@@ -161,9 +161,9 @@ class QuickRoute:
             
             # Display current stop
             if i == 0:
-                print(f"\n🚏 START: {current_stop.get_name()}")
+                print(f"\n START: {current_stop.get_name()}")
             elif i == len(path) - 1:
-                print(f"\n🎯 DESTINATION: {current_stop.get_name()}")
+                print(f"\n DESTINATION: {current_stop.get_name()}")
             else:
                 # Show intermediate stop
                 # Find which route we're on
@@ -197,7 +197,7 @@ class QuickRoute:
                         cumulative_time += transit_time
         
         print("-" * 60)
-        print(f"\n📊 SUMMARY:")
+        print(f"\n SUMMARY:")
         print(f"   Total Stops: {len(path)}")
         print(f"   Total Transit Time: {total_time:.1f} minutes")
         print(f"   Algorithm: {algorithm}")

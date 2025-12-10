@@ -124,8 +124,9 @@ class Graph:
                     stop_a.get_route_ids() != stop_b.get_route_ids()):
                     
                     # Create bidirectional transfer edges with 0 time
-                    edge_a_to_b = Edge(stop_a, stop_b, -1, 0.0)
-                    edge_b_to_a = Edge(stop_b, stop_a, -1, 0.0)
+                    TRANSFER_PENALTY = 15.0
+                    edge_a_to_b = Edge(stop_a, stop_b, -1, TRANSFER_PENALTY)
+                    edge_b_to_a = Edge(stop_b, stop_a, -1, TRANSFER_PENALTY)
                     
                     if stop_a.stop_id in self.edges and stop_b.stop_id in self.edges:
                         self.edges[stop_a.stop_id].append(edge_a_to_b)
@@ -246,6 +247,10 @@ class Graph:
         for stop in self.stops:
             i = stop_index[stop]
             for edge in self.get_connections(stop.stop_id):
+                if edge.get_route_id() == -1:
+                    continue
+                if edge.get_transit_time() == 0:
+                    continue
                 j = stop_index[edge.get_end_stop()]
                 dist[i][j] = edge.get_transit_time()
                 next_stop[i][j] = j
@@ -502,12 +507,14 @@ class Graph:
         while not myqueue.empty():
             u = myqueue.get()
             for edge in self.get_connections(u.stop_id):
+                if edge.get_route_id() == -1:
+                    continue
                 end = edge.get_end_stop()
                 if state[end] == "undiscovered":
                     state[end] = "discovered"
                     nodes_explored += 1
                     previous[end] = u
-                    dist[end] = edge.get_transit_time()
+                    dist[end] = dist[u] + edge.get_transit_time()
                     myqueue.put(end)
                     
             state[u] = "processed"
@@ -562,9 +569,14 @@ class Graph:
 
             if current == destination:
                 break
+            
+            
 
             for edge in self.get_connections(current.stop_id):
                 neighbor = edge.get_end_stop()
+
+                if edge.get_route_id() == -1:
+                    continue  # skip transfer edges so DFS can't teleport
 
                 if neighbor not in visited:
                     visited.add(neighbor)
